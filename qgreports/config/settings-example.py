@@ -7,7 +7,6 @@ debug = False
 QualysAPI = {
     'username': '',
     'password': '',
-    'url': 'https://qualysapi.qualys.com',
     'scan_template': ''
 }
 

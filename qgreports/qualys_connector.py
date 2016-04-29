@@ -5,19 +5,20 @@ import xml.etree.ElementTree as ET
 import datetime
 import time
 import subprocess
-import qgreports.config.settings
 import certifi
 import logging.config
 
 __author__ = "dmwoods38"
-qualys_api_url = qgreports.config.settings.QualysAPI['url']
+qualys_api_url = "https://qualysapi.qualys.com"
 xreq_header = {"X-Requested-With": "Python"}
 session_path = "/api/2.0/fo/session/"
 
-#init logger
-logging.config.fileConfig(os.path.join(os.path.dirname(qgreports.config.__file__),
-                          'logging_config.ini'))  
-logger = logging.getLogger()
+logger = None
+
+
+def set_logger(_logger):
+    logger = _logger
+
 
 # Params: Strings for username and password
 # Optional headers to include with login request
@@ -208,12 +209,12 @@ def get_asset_group_ips(scheduled_reports, session, params=None):
 # TODO: Add support for reports with multiple scan refs.
 # Description: Launches scan reports and then returns the refs
 #              with the corresponding report ids
-def launch_scan_reports(scheduled_reports, session, params=None):
+def launch_scan_reports(scheduled_reports, session, params=None, settings=None):
     if params is None:
         params = {}
     params.update({"report_type": "Scan", "action": "launch"})
-    params.update({"template_id":
-                       qgreports.config.settings.QualysAPI['scan_template']})
+    if settings and 'QualysAPI' in settings and 'scan_template' in settings.QualysAPI:
+        params.update({"template_id": settings.QualysAPI['scan_template']})
     dest_url = "/api/2.0/fo/report/"
     item_xpath = "./RESPONSE/ITEM_LIST/ITEM"
     max_num_xpath = "./RESPONSE/TEXT"
@@ -245,9 +246,10 @@ def launch_scan_reports(scheduled_reports, session, params=None):
                     break
             logger.debug(response.text)
         else:
-            with open(qgreports.config.settings.unprocessed_log, "a") as f:
-                f.write("Unprocessed for " + datetime.date.today().__str__())
-                f.write(report.email.subject)
+            if settings and 'unprocessed_log' in settings:
+                with open(settings.unprocessed_log, "a") as f:
+                    f.write("Unprocessed for " + datetime.date.today().__str__())
+                    f.write(report.email.subject)
 
 
 # Check that the report is finished before we try to download them.
@@ -279,38 +281,39 @@ def check_report_status(scheduled_reports, session):
 
 # Download reports
 def get_reports(scheduled_reports, session, add_timestamp=True,
-                no_clobber=False):
+                no_clobber=False, settings=None):
     params = {"action": "fetch"}
     dest_url = "/api/2.0/fo/report/"
-    report_path = qgreports.config.settings.report_folder
+    if settings and 'report_folder' in settings:
+        report_path = settings.report_folder
 
-    if add_timestamp:
-        today = datetime.date.today().__str__()
-        report_suffix = ' ' + today
-    else:
-        report_suffix = ''
-    keepcharacters = (' ', '.', '_', '/', '-')
-    logger.info('Trying to get reports...')
-    for report in scheduled_reports:
-        if report.report_id is None:
-            continue
-        params.update({"id": report.report_id})
-        report_name = ''.join(c for c in report.email.subject if c.isalnum() or
-                              c in keepcharacters)
-        report_name = report_name.replace('/', '_') + report_suffix
-
-        filetype = '.' + report.output
-        report.report_filename = report_path + report_name + filetype
-        if no_clobber:
-            with open(report.report_filename, 'ab') as f:
-                response = request(params, session, dest_url)
-                check_status(response)
-                f.write(response.content)
+        if add_timestamp:
+            today = datetime.date.today().__str__()
+            report_suffix = ' ' + today
         else:
-            with open(report.report_filename, 'wb') as f:
-                response = request(params, session, dest_url)
-                check_status(response)
-                f.write(response.content)
+            report_suffix = ''
+        keepcharacters = (' ', '.', '_', '/', '-')
+        logger.info('Trying to get reports...')
+        for report in scheduled_reports:
+            if report.report_id is None:
+                continue
+            params.update({"id": report.report_id})
+            report_name = ''.join(c for c in report.email.subject if c.isalnum() or
+                                  c in keepcharacters)
+            report_name = report_name.replace('/', '_') + report_suffix
+
+            filetype = '.' + report.output
+            report.report_filename = report_path + report_name + filetype
+            if no_clobber:
+                with open(report.report_filename, 'ab') as f:
+                    response = request(params, session, dest_url)
+                    check_status(response)
+                    f.write(response.content)
+            else:
+                with open(report.report_filename, 'wb') as f:
+                    response = request(params, session, dest_url)
+                    check_status(response)
+                    f.write(response.content)
 
 
 # Returns API scan results, not the same as a scan report. Much less detail.

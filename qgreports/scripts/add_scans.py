@@ -17,11 +17,12 @@ logging.config.fileConfig(os.path.join(os.path.dirname(qgreports.config.__file__
 logger = logging.getLogger()
 
 
-def main():
+def main(scan_config=None):
     # Add ips, add asset groups and schedule a scan
     with open(scan_config) as f:
         scan_entries = json.load(f)
 
+    qc.set_logger(logger)
     session = qc.login(user, password)
 
     try:
