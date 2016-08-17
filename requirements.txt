@@ -1,0 +1,4 @@
+requests[security]
+elasticsearch
+requests-aws4auth
+git+https://github.com/dmwoods38/QualysReporting.git
