@@ -1,3 +1,5 @@
 language: python
 script: nosetests
 env: SONARQUBE_TOKEN=acfdda165611321b8ffad4769e81772d6e60c5f1
+env: SONAR_HOST_URL=https://nemo.sonarqube.org
+enc: SONAR_TOKEN=acfdda165611321b8ffad4769e81772d6e60c5f1
