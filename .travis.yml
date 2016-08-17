@@ -1,5 +1,7 @@
 language: python
 sudo: required
 install: true
+before_install:
+ - chmod +x runsqa.sh
 script:
   - ./runsqa.sh
