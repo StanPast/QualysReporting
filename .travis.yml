@@ -1,2 +1,3 @@
 language: python
 script: nosetests
+"env": "SONARQUBE_TOKEN=acfdda165611321b8ffad4769e81772d6e60c5f1",
