@@ -4,7 +4,7 @@ install: true
 before_install:
  - chmod +x runsqa.sh
 env:
- - SONAR_HOST_URL=https://nemo.sonarqube.org
+# - SONAR_HOST_URL=https://nemo.sonarqube.org
  - SONAR_TOKEN=324a127e63d9d88c492ad2da768cda4eb5de56d4 
 cache:
   directories:
