@@ -1,5 +1,4 @@
 language: python
 sudo: required
-env: SONAR_HOST_URL=https://nemo.sonarqube.org
-env: SONAR_PROJECTKEY=StanPast_QualysReporting
+install: true
 script:   ./runsqa.sh
