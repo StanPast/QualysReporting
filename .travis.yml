@@ -5,8 +5,5 @@ before_install:
  - chmod +x runsqa.sh
 env:
  - SONAR_HOST_URL=https://nemo.sonarqube.org
-cache:
-  directories:
-    - '$HOME/.sonar/cache'
 script:
  - ./runsqa.sh
