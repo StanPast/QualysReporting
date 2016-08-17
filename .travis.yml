@@ -1,10 +1,5 @@
 language: python
 sudo: required
 install: true
-script:   ./runsqa.sh
-
-language: python
-sudo: required
-install: true
 script:
   - ./runsqa.sh
