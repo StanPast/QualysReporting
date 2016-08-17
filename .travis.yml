@@ -1,6 +1,5 @@
 language: python
 sudo: required
-script: nosetests
 env: SONAR_HOST_URL=https://nemo.sonarqube.org
-Env: SONAR_PROJECTKEY=StanPast_QualysReporting
-env: SONAR_TOKEN=acfdda165611321b8ffad4769e81772d6e60c5f1
+env: SONAR_PROJECTKEY=StanPast_QualysReporting
+script: nosetests
