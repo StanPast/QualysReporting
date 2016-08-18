@@ -6,7 +6,5 @@ before_install:
  - sudo apt-get update
 env:
  - SONAR_HOST_URL=https://nemo.sonarqube.org
-language: java
-
 script:
  - ./runsqa.sh
