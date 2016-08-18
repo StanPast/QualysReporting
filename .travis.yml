@@ -3,7 +3,7 @@ sudo: required
 install: true
 before_install:
  - chmod +x runsqa.sh
- - sudo apt-get install oracle-java9-installer
+ - sudo apt-get -qq update
 env:
  - SONAR_HOST_URL=https://nemo.sonarqube.org
 language: java
