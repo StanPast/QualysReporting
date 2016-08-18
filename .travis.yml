@@ -8,6 +8,5 @@ before_install:
  - sudo apt-get update
 env:
  - SONAR_HOST_URL="https://sonarqube.com"
- - SONAR_TOKEN="55c3ebb69b4396f967109d36a94e24b6e8c547c0"
 script:
  - ./runsqa.sh
