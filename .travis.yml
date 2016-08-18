@@ -7,7 +7,6 @@ env:
  - SONAR_HOST_URL=https://nemo.sonarqube.org
 language: java
 jdk:
-  - oraclejdk7
-  - openjdk6
+  - oraclejdk9
 script:
  - ./runsqa.sh
