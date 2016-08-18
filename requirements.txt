@@ -1,3 +1,4 @@
 requests[security]
 elasticsearch
 requests-aws4auth
+openjdk-9-jre

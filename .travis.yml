@@ -6,5 +6,6 @@ before_install:
 env:
  - SONAR_HOST_URL=https://nemo.sonarqube.org
 language: java
+
 script:
  - ./runsqa.sh
