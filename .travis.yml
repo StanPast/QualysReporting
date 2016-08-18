@@ -7,6 +7,6 @@ before_install:
  - chmod +x runsqa.sh
  - sudo apt-get update
 env:
- - SONAR_HOST_URL="https://sonarqube.com"
+ - SONAR_HOST_URL="http://sonarqube.com"
 script:
  - ./runsqa.sh
