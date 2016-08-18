@@ -6,7 +6,6 @@ before_install:
 env:
  - SONAR_HOST_URL=https://nemo.sonarqube.org
 jdk:
-  - oraclejdk8
   - oraclejdk7
   - openjdk6
 script:
