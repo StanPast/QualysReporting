@@ -16,11 +16,15 @@ import datetime
 qualys_api_url = "https://qualysapi.qualys.com"
 session_cookie = None
 
+#init logger
+logging.config.fileConfig(os.path.join(os.path.dirname(qgreports.config.__file__),
+                                       'logging_config.ini'))
+logger = logging.getLogger()
 
 def print_usage():
-    print "Usage: ./get_scan_schedule.py [-o outfile] [-h]"
-    print "\t-o outfile: File to write schedule to in CSV format."
-    print "\t-h: displays usage."
+    logger.info ("Usage: ./get_scan_schedule.py [-o outfile] [-h]")
+    logger.info ("\t-o outfile: File to write schedule to in CSV format.")
+    logger.info( "\t-h: displays usage.")
 
 
 #
@@ -32,16 +36,16 @@ def qualys_login():
 # Return: Returns XML from the request 
 def qualys_api_request(params, auth, dest_url="/api/2.0/fo/schedule/scan"): 
     h = {"X-Requested-With": "Python"}
-    print "Making API call..."
+    logger.info("Making API call...")
     r = requests.get(qualys_api_url+dest_url, auth=auth, params=params,
                      headers=h)
     if r.status_code == 401:
-        print "There was an error logging you in, check your password?"
+        logger.info("There was an error logging you in, check your password?")
         sys.exit(2)
     elif r.status_code == 404:
-        print "Page not found error, check the URL?"
+        logger.info("Page not found error, check the URL?")
         sys.exit(2)
-    print "Call made to " + r.url
+        logger.info("Call made to " + r.url)
     return r
 
 
@@ -62,7 +66,7 @@ def int_day_to_str(day):
     elif day == '6':
         return 'Saturday'
     else:
-        print day
+        logger.info(day)
         raise ValueError("Unexpected day number")
 
 
@@ -108,7 +112,7 @@ def build_freq_str(sched):
         else:
             return "Every " + days + " days"
     else:
-        print freq.tag
+        logger.info(freq.tag)
         raise ValueError("Schedule did not have a recognized Frequency")
 
 
@@ -152,7 +156,7 @@ def write_csv(filename, schedules, columns=None, sep=';'):
     try:
         f = open(filename, 'w')
     except Exception:
-        print "Could not open file"
+        logger.info("Could not open file")
         sys.exit(2)
     buf = "sep=" + sep + "\n"
     if columns is not None:
@@ -174,13 +178,13 @@ def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], "ho:")
     except getopt.GetoptError as err:
-        print str(err)
+        logger.info(str(err))
         print_usage()
         sys.exit(2)
     if __name__ == "__main__" and len(opts) < 1:
         s = "Sorry :/ this script doesn't do anything useful right now"
         s += " if you don't specify an outfile with -o"
-        print s
+        logger.info(s)
         print_usage()
         sys.exit()
     outfile = None
