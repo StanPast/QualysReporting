@@ -77,9 +77,7 @@ def main():
         report_entries = json.load(f)
     scheduled_reports = []
     for report in report_entries:
-        if report.get('day_of_month') == str(datetime.date.today().day):
-            scheduled_reports.append(report)
-        elif report.get('day_of_week') == str(datetime.date.today().weekday()):
+        if (report.get('day_of_month') == str(datetime.date.today().day)) or (report.get('day_of_week') == str(datetime.date.today().weekday())):
             scheduled_reports.append(report)
 
     # if scheduled_reports.count() == 0:
