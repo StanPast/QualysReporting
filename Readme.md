@@ -1,4 +1,8 @@
 # QualysReporting
+
+[![Join the chat at https://gitter.im/qualysreporting/Lobby](https://badges.gitter.im/qualysreporting/Lobby.svg)](https://gitter.im/qualysreporting/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/StanPast/QualysReporting.svg?branch=master)](https://travis-ci.org/StanPast/QualysReporting)
+
 Tool to help with automation of Qualysguard scan report download and delivery.
 
 Disclaimer: This is not associated with Qualys in any way, this is just the
