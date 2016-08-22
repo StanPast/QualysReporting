@@ -10,6 +10,11 @@ from requests_aws4auth import AWS4Auth
 from qgreports.utils.results_methods import parse_csv_scan_header
 __author__ = 'dmwoods38'
 
+#init logger
+logging.config.fileConfig(os.path.join(os.path.dirname(qgreports.config.__file__),
+                                       'logging_config.ini'))
+logger = logging.getLogger()
+
 es_mapping_path = os.path.dirname(os.path.realpath(__file__))
 vuln_mapping_path = es_mapping_path + '/config/qualys-vuln-mapping.json'
 scan_mapping_path = es_mapping_path + '/config/qualys-scan-mapping.json'
@@ -22,7 +27,7 @@ else:
 def initialize_es():
     # Check ES config from settings
     if es_config is None:
-        print 'Elasticsearch settings not found'
+        logger.info('Elasticsearch settings not found')
         sys.exit(2)
     if es_config['host'] != '':
         if es_config['aws_auth']:

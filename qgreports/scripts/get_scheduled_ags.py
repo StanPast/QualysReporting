@@ -6,6 +6,11 @@ import qgreports.qualys_connector as qc
 import sys
 import xml.etree.ElementTree as ET
 
+#init logger
+logging.config.fileConfig(os.path.join(os.path.dirname(qgreports.config.__file__),
+                                       'logging_config.ini'))
+logger = logging.getLogger()
+
 username = qgreports.config.settings.QualysAPI['username']
 password = qgreports.config.settings.QualysAPI['password']
 dest_url = '/api/2.0/fo/schedule/scan'
@@ -29,7 +34,7 @@ def int_day_to_str(day):
     elif day == '6':
         return 'Saturday'
     else:
-        print day
+        logger.info(day)
         raise ValueError("Unexpected day number")
 
 
@@ -75,7 +80,7 @@ def build_freq_str(sched):
         else:
             return "Every " + days + " days"
     else:
-        print freq.tag
+        logger.info(freq.tag)
         raise ValueError("Schedule did not have a recognized Frequency")
 
 
@@ -116,7 +121,7 @@ def parse_schedule(schedule_xml, session):
         for ag in ags:
             if ag is None:
                 continue
-            print ag.asset_groups
+                logger.info(ag.asset_groups)
 
             ag_schedule = {'Frequency': schedule.get('Frequency')}
             ag_schedule.update({'Time': schedule.get('Time'),
@@ -139,7 +144,7 @@ def write_csv(filename, schedules, columns=None, sep=';'):
     try:
         f = open(filename, 'w')
     except Exception:
-        print "Could not open file"
+        logger.info("Could not open file")
         sys.exit(2)
     buf = "sep=" + sep + "\n"
     if columns is not None:

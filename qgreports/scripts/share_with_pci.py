@@ -7,6 +7,10 @@ from sys import exit
 import traceback
 __author__ = 'dmwoods38'
 
+#init logger
+logging.config.fileConfig(os.path.join(os.path.dirname(qgreports.config.__file__),
+                                       'logging_config.ini'))
+logger = logging.getLogger()
 
 def main(**kwargs):
     user = kwargs.get('user', None)
@@ -25,7 +29,7 @@ def main(**kwargs):
     try:
         qc.get_scan_refs([qg_scan], session)
         if not qg_scan.is_processed():
-            print 'Scan is not currently processed'
+            logger.info('Scan is not currently processed')
             exit(0)
 
         merchant_user = raw_input('Qualys merchant username: ')
@@ -33,7 +37,7 @@ def main(**kwargs):
                   'merchant_username': merchant_user}
         dest_url = '/api/2.0/fo/scan/pci/'
         response = qc.request(params, session, dest_url)
-        print response.text
+        logger.info(response.text)
 
         # Check share status
         for i in range(0, 3):
@@ -45,8 +49,8 @@ def main(**kwargs):
             ))
             if status_xml.find('./RESPONSE/SCAN/STATUS').text == \
                     'Finished':
-                print 'Scan ' + qg_scan.scan_id + \
-                      ' shared with merchant account'
+                logger.info('Scan ' + qg_scan.scan_id + \
+                      ' shared with merchant account')
                 return
             time.sleep(720)
         exit(2)
